@@ -12,8 +12,8 @@
 | Member1     |    da30@illinois.edu   |
 | Member2     |      Yana Rudianyn     |
 | Member2     |    yr17@illinois.edu   |
-| Member3     |                        |
-| Member3     |                        |
+| Member3     |      Nakul Kuppu       |
+| Member3     |          nkuppu2       |
 
 ## Project Information
 
