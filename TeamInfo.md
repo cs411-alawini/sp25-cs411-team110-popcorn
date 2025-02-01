@@ -13,7 +13,7 @@
 | Member2     |      Yana Rudianyn     |
 | Member2     |    yr17@illinois.edu   |
 | Member3     |      Nakul Kuppu       |
-| Member3     |          nkuppu2       |
+| Member3     |  nkuppu2@illinois.edu  |
 
 ## Project Information
 
