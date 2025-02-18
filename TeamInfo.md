@@ -10,10 +10,10 @@
 | Captain     | agusain2@illinois.edu  |
 | Member1     |    Devansh Agarwal     |
 | Member1     |    da30@illinois.edu   |
-| Member2     |      Yana Rudianyn     |
-| Member2     |    yr17@illinois.edu   |
-| Member3     |      Nakul Kuppu       |
-| Member3     |          nkuppu2@illinois.edu       |
+| Member2     |       Nakul Kuppu      |
+| Member2     |  nkuppu2@illinois.edu  |
+| Member3     |                        |
+| Member3     |                        |
 
 ## Project Information
 
