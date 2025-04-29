@@ -1,0 +1,91 @@
+Code for Transaction, Trigger and Stored Procedure
+
+DELIMITER //
+
+CREATE PROCEDURE ApplyForJobProcedure(
+  IN inputUserID INT,
+  IN inputJobID INT
+)
+BEGIN
+  DECLARE existingApp       INT DEFAULT 0;
+  DECLARE topCompanyApps    INT DEFAULT 0;
+  DECLARE mostPopularJobID  INT DEFAULT 0;
+  DECLARE mostPopularTitle  VARCHAR(255);
+
+  -- Advanced Query #1:
+  SELECT 
+    COUNT(a.ApplicationID)
+  INTO topCompanyApps
+  FROM Application a
+  JOIN Job j 
+    ON a.JobID = j.JobID
+  WHERE a.UserID = inputUserID
+  GROUP BY j.Company
+  ORDER BY COUNT(a.ApplicationID) DESC
+  LIMIT 1;
+
+  -- Advanced Query #2:
+  SELECT 
+    JobID
+  INTO mostPopularJobID
+  FROM Application
+  WHERE JobID IN (
+    SELECT JobID
+    FROM Job
+    WHERE Location = (
+      SELECT Location FROM Job WHERE JobID = inputJobID
+    )
+  )
+  GROUP BY JobID
+  ORDER BY COUNT(*) DESC
+  LIMIT 1;
+
+  SELECT Title 
+  INTO mostPopularTitle
+  FROM Job
+  WHERE JobID = mostPopularJobID;
+
+  START TRANSACTION;
+
+    SELECT COUNT(*) INTO existingApp
+    FROM Application
+    WHERE UserID = inputUserID
+      AND JobID  = inputJobID;
+
+    IF existingApp > 0 THEN
+      ROLLBACK;
+      SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'User already applied to this job';
+    ELSE
+      INSERT INTO Application (UserID, JobID, Status)
+      VALUES (inputUserID, inputJobID, 'Applied');
+
+      COMMIT;
+    END IF;
+
+END;
+//
+
+DELIMITER ;
+
+
+Check contraint —
+
+ALTER TABLE Application
+ADD CONSTRAINT chk_application_status
+CHECK (Status IN ('Applied', 'Rejected', 'Pending'));
+
+
+DELIMITER //
+
+CREATE TRIGGER after_application_insert
+AFTER INSERT ON Application
+FOR EACH ROW
+BEGIN
+    INSERT INTO Notification (UserID, JobID, ApplicationID, Status)
+    VALUES (NEW.UserID, NEW.JobID, NEW.ApplicationID, 'Applied');
+END;
+
+//
+
+DELIMITER ;
